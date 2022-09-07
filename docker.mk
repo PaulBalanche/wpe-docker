@@ -71,7 +71,7 @@ remote-mysqldump:
 	docker exec $(shell docker ps --filter name='^/$(PROJECT_NAME)_php' --format "{{ .ID }}") sh wpe-docker/make/mysqldump.sh "$(REMOTE_DB_HOST)" "$(REMOTE_DB_USER)" "$(REMOTE_DB_PASSWORD)" "$(REMOTE_DB_NAME)" "$(SQL_FILE)"
 
 mysql-import:
-	docker exec -i $(shell docker ps --filter name='^/$(PROJECT_NAME)_mariadb' --format "{{ .ID }}") sh -c 'exec mysql --user="$(DB_USER)" --password="$(DB_PASSWORD)" $(DB_NAME)' < "$(SQL_FILE)"
+	docker exec -i $(shell docker ps --filter name='^/$(PROJECT_NAME)_mariadb' --format "{{ .ID }}") sh -c 'exec mysql -uroot --password="$(DB_ROOT_PASSWORD)" $(DB_NAME)' < $(filter-out $@,$(MAKECMDGOALS))
 
 php-up:
 	@docker-compose up -d --remove-orphans php
